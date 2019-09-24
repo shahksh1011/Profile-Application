@@ -187,7 +187,7 @@ public class SignUpActivity extends AppCompatActivity {
 
             String jsonString = gson.toJson(user);
             Log.v(TAG, jsonString);
-            post(Parameters.API_URL_LOCAL+"/signup", jsonString);
+            post(Parameters.API_URL_LOCAL+"/auth/signup", jsonString);
         }
     }
 

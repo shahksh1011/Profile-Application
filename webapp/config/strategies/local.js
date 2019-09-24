@@ -34,7 +34,7 @@ module.exports = function() {
 			}
 			
 			// Otherwise, continue to the next middleware with the user object
-			return done(null, user);
+			return done(null, user, {message: 'Logged In Successfully'});
 		});
 	}));
 };

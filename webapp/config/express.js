@@ -32,8 +32,13 @@ module.exports = function() {
 	// Configure the Passport middleware
 	app.use(passport.initialize());
 
+	app.get('/', (req, res) => res.send('Hello World!'));
+
+	const userAuth = require('../app/routes/users.server.routes.js');
+	const profileRoute = require('../app/routes/profile.server.routes.js');
 	// Load the routing files
-	require('../app/routes/users.server.routes.js')(app);
+	app.use('/auth', userAuth);
+	app.use('/user', passport.authenticate('jwt', {session: false}), profileRoute);
 
 	// Return the Express application instance
 	return app;

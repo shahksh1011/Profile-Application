@@ -3,7 +3,9 @@
 
 // Load the module dependencies
 var User = require('mongoose').model('User'),
-	passport = require('passport');
+	passport = require('passport'),
+	jwt = require('jsonwebtoken'),
+	config = require('../../config/config');
 
 // Create a new error handling controller method
 var getErrorMessage = function(err) {
@@ -51,60 +53,25 @@ exports.signup = function(req, res, next) {
 				// Use the error handling method to get the error message
 				var message = getErrorMessage(err);
 
-				// Redirect the user back to the signup page
-				return res.redirect('/signup');
+				return res.json({message:message});
 			}
 
 			// If the user was created successfully use the Passport 'login' method to login
-			req.login(user, function(err) {
-				// If a login error occurs move to the next middleware
-				if (err) return next(err);
-
-				// Redirect the user back to the main application page
-				return res.redirect('/');
+			req.login(user, { session: false }, (err) => {
+				if (err) {
+					res.send(err);
+				}
+				var message = "User created successfully";
+				// generate a signed son web token with the contents of user object and return it in the response
+				const token = jwt.sign(user.toJSON(), config.sessionSecret, {
+					expiresIn: 604800 // 1 week
+				});
+				return res.json({ user, token,  message});
 			});
 		});
 	} else {
 		return res.redirect('/');
 	}
-};
-
-// Create a new controller method that creates new 'OAuth' users
-exports.saveOAuthUserProfile = function(req, profile, done) {
-	// Try finding a user document that was registered using the current OAuth provider
-	User.findOne({
-		provider: profile.provider,
-		providerId: profile.providerId
-	}, function(err, user) {
-		// If an error occurs continue to the next middleware
-		if (err) {
-			return done(err);
-		} else {
-			// If a user could not be found, create a new user, otherwise, continue to the next middleware
-			if (!user) {
-				// Set a possible base username
-				var possibleUsername = profile.username || ((profile.email) ? profile.email.split('@')[0] : '');
-
-				// Find a unique available username
-				User.findUniqueUsername(possibleUsername, null, function(availableUsername) {
-					// Set the available user name 
-					profile.username = availableUsername;
-					
-					// Create the user
-					user = new User(profile);
-
-					// Try saving the new user document
-					user.save(function(err) {
-						// Continue to the next middleware
-						return done(err, user);
-					});
-				});
-			} else {
-				// Continue to the next middleware
-				return done(err, user);
-			}
-		}
-	});
 };
 
 exports.requiresLogin = function(req, res, next) {

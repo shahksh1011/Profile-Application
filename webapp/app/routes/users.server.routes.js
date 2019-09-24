@@ -3,29 +3,39 @@
 
 // Load the module dependencies
 var users = require('../../app/controllers/users.server.controller'),
-	passport = require('passport');
+	passport = require('passport'),
+	jwt = require('jsonwebtoken'),
+	express = require('express'),
+	router = express.Router(),
+	config = require('../../config/config');
 
-// Define the routes module' method
-module.exports = function(app) {
-	// Set up the 'signup' routes 
+// Set up the 'signup' routes 
+router.post('/signup', users.signup);
 
-	app.get('/', (req, res) => res.send('Hello World!'))
+// Set up the 'signin' routes 
+router.post('/signin', function (req, res, next) {
+	passport.authenticate('local', { session: false }, (err, user, info) => {
+		if (err || !user) {
+			return res.status(400).json({
+				message: 'Something is not right',
+				user: user
+			});
+		}
+		req.login(user, { session: false }, (err) => {
+			if (err) {
+				res.send(err);
+			}
+			var message = 'Logged in Successfully';
+			// generate a signed son web token with the contents of user object and return it in the response
+			const token = jwt.sign(user.toJSON(), config.sessionSecret, {
+				expiresIn: 604800 // 1 week
+			});
+			return res.json({ user, token, message });
+		});
+	})(req, res);
+});
 
-	app.route('/signup')
-	   .post(users.signup);
+// Set up the 'signout' route
+router.get('/signout', users.signout);
 
-	// Set up the 'signin' routes 
-	app.route('/signin')
-	   .post(passport.authenticate('local', {
-			successRedirect: '/',
-			failureRedirect: '/signin',
-			failureFlash: true
-	   }));
-
-	// Set up the 'signout' route
-	app.get('/signout', users.signout);
-
-	app.get('/api/userIdList' , users.getUserIdList);
-
-	app.post('/api/changeUserRole' , users.requiresLogin , users.changeUserRole);
-};
+module.exports = router;
