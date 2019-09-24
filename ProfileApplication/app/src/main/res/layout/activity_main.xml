@@ -1,20 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <TextView
-        android:id="@+id/mainActivity_singUpTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="140dp"
-        android:text="@string/sign_up"
-        android:textSize="18sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.531"
-        app:layout_constraintStart_toStartOf="parent" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+        <Button
+            android:id="@+id/main_loginButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="56dp"
+            android:background="@drawable/rounded_button"
+            android:text="@string/login"
+            android:textColor="@color/colorPrimary"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/main_passwordEditText"
+            app:layout_constraintStart_toStartOf="@+id/main_passwordEditText"
+            app:layout_constraintTop_toBottomOf="@+id/main_passwordEditText" />
+
+        <EditText
+            android:id="@+id/main_passwordEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:ems="10"
+            android:hint="@string/password"
+            android:importantForAutofill="no"
+            android:inputType="textPassword"
+            app:layout_constraintEnd_toEndOf="@+id/main_usernameEditText"
+            app:layout_constraintStart_toStartOf="@+id/main_usernameEditText"
+            app:layout_constraintTop_toBottomOf="@+id/main_usernameEditText" />
+
+        <EditText
+            android:id="@+id/main_usernameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="56dp"
+            android:layout_marginTop="64dp"
+            android:layout_marginEnd="56dp"
+            android:ems="10"
+            android:hint="@string/username"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_LogoImageView" />
+
+        <ImageView
+            android:id="@+id/main_LogoImageView"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
+            android:layout_marginTop="48dp"
+            android:contentDescription="@string/logo"
+            android:scaleType="fitCenter"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/profile"
+            tools:srcCompat="@tools:sample/avatars" />
+
+        <TextView
+            android:id="@+id/main_forgotPasswordTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/forgotPassword"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/main_passwordEditText"
+            app:layout_constraintTop_toBottomOf="@+id/main_passwordEditText" />
+
+        <TextView
+            android:id="@+id/main_signUpTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="176dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="178dp"
+            android:text="@string/signUp"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/main_loginButton" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

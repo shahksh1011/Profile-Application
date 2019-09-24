@@ -3,8 +3,10 @@ package com.app.profileapplication;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
@@ -19,7 +21,13 @@ import com.app.profileapplication.utilities.CircleTransform;
 import com.app.profileapplication.utilities.Parameters;
 import com.app.profileapplication.utilities.TextValidator;
 import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 
 import java.io.File;
 import java.io.IOException;
@@ -61,6 +69,7 @@ public class SignUpActivity extends AppCompatActivity {
     @BindView(R.id.signUp_usernameEditText)
     EditText usernameEditText;
 
+    private String message;
     private Uri selectedImageURI;
     private User user;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
@@ -228,6 +237,26 @@ public class SignUpActivity extends AppCompatActivity {
                     }
 
                     Log.v(TAG,responseBody.string());
+                    JSONParser parser = new JSONParser();
+                    try {
+                        JSONObject json = (JSONObject) parser.parse(responseBody.string());
+                        String token = (String) json.get(Parameters.TOKEN);
+                        message = (String) json.get(Parameters.MESSAGE);
+                        runOnUiThread(() -> Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show());
+                        if (token != null) {
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString(Parameters.TOKEN, token);
+                            editor.apply();
+                            Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
+                            startActivity(intent);
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e){
+                        e.printStackTrace();
+                    }
+
                 }
             }
         });

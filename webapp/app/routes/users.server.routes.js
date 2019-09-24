@@ -30,7 +30,7 @@ router.post('/signin', function (req, res, next) {
 			const token = jwt.sign(user.toJSON(), config.sessionSecret, {
 				expiresIn: 604800 // 1 week
 			});
-			return res.json({ user, token, message });
+			return res.json({ token, message });
 		});
 	})(req, res);
 });

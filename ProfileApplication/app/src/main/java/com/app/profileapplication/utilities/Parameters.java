@@ -54,4 +54,8 @@ public final class Parameters {
     public static final String API_URL_LOCAL = "http://10.0.2.2:3000";
 
 
+    public static final String TOKEN = "token";
+    public static final String HOME_FRAGMENT = "home_fragment";
+    public static final String USERNAME = "username";
+    public static final String PASSWORD = "password";
 }
