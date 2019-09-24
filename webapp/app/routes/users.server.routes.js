@@ -12,12 +12,10 @@ module.exports = function(app) {
 	app.get('/', (req, res) => res.send('Hello World!'))
 
 	app.route('/signup')
-	   .get(users.renderSignup)
 	   .post(users.signup);
 
 	// Set up the 'signin' routes 
 	app.route('/signin')
-	   .get(users.renderSignin)
 	   .post(passport.authenticate('local', {
 			successRedirect: '/',
 			failureRedirect: '/signin',

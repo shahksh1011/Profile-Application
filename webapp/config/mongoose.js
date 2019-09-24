@@ -9,7 +9,7 @@ var	config = require('./config'),
 // Define the Mongoose configuration method
 module.exports = function() {
 	// Use Mongoose to connect to MongoDB
-	var connection = mongoose.createConnection(config.db);
+	var connection = mongoose.connect(config.db);
 
 	autoIncrement.initialize(connection);
 

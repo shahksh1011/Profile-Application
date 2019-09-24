@@ -50,4 +50,8 @@ public final class Parameters {
     public static final String PICKUP_DESTINATION = "Pickup Destination:";
     public static final String DROPOFF_DESTINATION = "Drop off Destination:";
 
+    public static final String API_URL = "https://profile-application.herokuapp.com";
+    public static final String API_URL_LOCAL = "http://10.0.2.2:3000";
+
+
 }

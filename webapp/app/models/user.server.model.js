@@ -52,6 +52,14 @@ var UserSchema = new Schema({
 		type: String,
 		default: 'User'
 	},
+	city: {
+		type: String,
+		required: 'City is required'
+	},
+	gender: {
+		type: String,
+			required: 'Gender is required'
+	},
 	created: {
 		type: Date,
 		// Create a default 'created' value

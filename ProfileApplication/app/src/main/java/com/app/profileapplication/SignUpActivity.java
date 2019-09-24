@@ -18,6 +18,7 @@ import com.app.profileapplication.models.User;
 import com.app.profileapplication.utilities.CircleTransform;
 import com.app.profileapplication.utilities.Parameters;
 import com.app.profileapplication.utilities.TextValidator;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -26,11 +27,15 @@ import java.io.IOException;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -53,18 +58,20 @@ public class SignUpActivity extends AppCompatActivity {
     EditText cityEditText;
     @BindView(R.id.signUp_genderRadioGroup)
     RadioGroup genderRadioGroup;
+    @BindView(R.id.signUp_usernameEditText)
+    EditText usernameEditText;
 
     private Uri selectedImageURI;
     private User user;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
-    OkHttpClient client = new OkHttpClient();
+    private OkHttpClient client = new OkHttpClient();
+    private Gson gson = new Gson();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_up);
         ButterKnife.bind(this);
-
         firstNameEditText.setText("");
         lastNameEditText.setText("");
         emailIdEditText.setText("");
@@ -114,6 +121,14 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
+        usernameEditText.addTextChangedListener(new TextValidator(usernameEditText) {
+            @Override
+            public void validate(TextView textView, String text) {
+                if (Parameters.EMPTY.equalsIgnoreCase(text))
+                    textView.setError(Parameters.EMPTY_ERROR_MESSAGE);
+            }
+        });
+
         cityEditText.addTextChangedListener(new TextValidator(cityEditText) {
             @Override
             public void validate(TextView textView, String text) {
@@ -133,7 +148,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     @OnClick(R.id.signUp_signUpButton)
-    public void submit(View view) {
+    public void click(View view) {
         long size = 0;
         if (selectedImageURI != null) {
             File f = new File(selectedImageURI.getPath());
@@ -147,6 +162,8 @@ public class SignUpActivity extends AppCompatActivity {
             lastNameEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (Parameters.EMPTY.equalsIgnoreCase(emailIdEditText.getText().toString()))
             emailIdEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
+        else if (Parameters.EMPTY.equalsIgnoreCase(usernameEditText.getText().toString()))
+            usernameEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (Parameters.EMPTY.equalsIgnoreCase(passwordEditText.getText().toString()))
             passwordEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
         else if (Parameters.EMPTY.equalsIgnoreCase(confirmPasswordEditText.getText().toString()))
@@ -164,9 +181,13 @@ public class SignUpActivity extends AppCompatActivity {
             RadioButton radioButton = findViewById(checkedRadioButtonId);
 
             user = new User(firstNameEditText.getText().toString(), lastNameEditText.getText().toString(),
-                    emailIdEditText.getText().toString(),
+                    emailIdEditText.getText().toString(), usernameEditText.getText().toString(),
+                    passwordEditText.getText().toString(),
                     cityEditText.getText().toString(), radioButton.getText().toString());
 
+            String jsonString = gson.toJson(user);
+            Log.v(TAG, jsonString);
+            post(Parameters.API_URL_LOCAL+"/signup", jsonString);
         }
     }
 
@@ -185,15 +206,31 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
 
-    String post(String url, String json) throws IOException {
+    public void post(String url, String json) {
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
                 .url(url)
                 .post(body)
                 .build();
-        try (Response response = client.newCall(request).execute()) {
-            return response.body().string();
-        }
+
+        client.newCall(request).enqueue(new Callback() {
+            @Override public void onFailure(Call call, IOException e) {
+                e.printStackTrace();
+            }
+
+            @Override public void onResponse(Call call, Response response) throws IOException {
+                try (ResponseBody responseBody = response.body()) {
+                    if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+                    Headers responseHeaders = response.headers();
+                    for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                        Log.v(TAG,responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                    }
+
+                    Log.v(TAG,responseBody.string());
+                }
+            }
+        });
     }
 
 }

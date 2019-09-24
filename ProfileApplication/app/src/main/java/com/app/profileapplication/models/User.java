@@ -3,18 +3,22 @@ package com.app.profileapplication.models;
 import java.io.Serializable;
 
 public class User implements Serializable {
-    private String id;
+    private String userId;
     private String userProfileImageUrl;
     private String firstName;
     private String lastName;
-    private String emailId;
+    private String email;
+    private String username;
+    private String password;
     private String city;
     private String gender;
 
-    public User(String firstName, String lastName, String emailId, String city, String gender) {
+    public User(String firstName, String lastName, String email, String username, String password, String city, String gender) {
         this.firstName = firstName;
         this.lastName = lastName;
-        this.emailId = emailId;
+        this.email = email;
+        this.username = username;
+        this.password = password;
         this.city = city;
         this.gender = gender;
     }
@@ -23,12 +27,12 @@ public class User implements Serializable {
 
     }
 
-    public String getId() {
-        return id;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
 
     public String getUserProfileImageUrl() {
@@ -55,12 +59,12 @@ public class User implements Serializable {
         this.lastName = lastName;
     }
 
-    public String getEmailId() {
-        return emailId;
+    public String getEmail() {
+        return email;
     }
 
-    public void setEmailId(String emailId) {
-        this.emailId = emailId;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getCity() {
@@ -79,14 +83,29 @@ public class User implements Serializable {
         this.gender = gender;
     }
 
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     @Override
     public String toString() {
         return "User{" +
-                "id='" + id + '\'' +
+                "userId='" + userId + '\'' +
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
-                ", emailId='" + emailId + '\'' +
+                ", email='" + email + '\'' +
                 ", city='" + city + '\'' +
                 ", gender='" + gender + '\'' +
                 '}';

@@ -8,7 +8,6 @@ var config = require('./config'),
 	compress = require('compression'),
 	bodyParser = require('body-parser'),
 	methodOverride = require('method-override'),
-	flash = require('connect-flash'),
 	passport = require('passport');
 
 // Define the Express configuration method
@@ -29,9 +28,6 @@ module.exports = function() {
 	}));
 	app.use(bodyParser.json());
 	app.use(methodOverride());
-
-	// Configure the flash messages middleware
-	app.use(flash());
 
 	// Configure the Passport middleware
 	app.use(passport.initialize());

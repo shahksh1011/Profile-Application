@@ -96,7 +96,7 @@
             android:inputType="textPassword"
             app:layout_constraintEnd_toEndOf="@+id/signUp_emailEditText"
             app:layout_constraintStart_toStartOf="@+id/signUp_emailEditText"
-            app:layout_constraintTop_toBottomOf="@+id/signUp_emailEditText" />
+            app:layout_constraintTop_toBottomOf="@+id/signUp_usernameEditText" />
 
         <EditText
             android:id="@+id/signUp_confirmPasswordEditText"
@@ -175,6 +175,18 @@
             app:layout_constraintEnd_toEndOf="@+id/signUp_genderRadioGroup"
             app:layout_constraintStart_toStartOf="@+id/signUp_genderRadioGroup"
             app:layout_constraintTop_toBottomOf="@+id/signUp_genderRadioGroup" />
+
+        <EditText
+            android:id="@+id/signUp_usernameEditText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:ems="10"
+            android:hint="@string/username"
+            android:inputType="textPersonName"
+            app:layout_constraintEnd_toEndOf="@+id/signUp_emailEditText"
+            app:layout_constraintStart_toStartOf="@+id/signUp_emailEditText"
+            app:layout_constraintTop_toBottomOf="@+id/signUp_emailEditText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
