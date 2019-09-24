@@ -1,2 +1,1 @@
-# gochiApi
-Api authentication
+# Api Authentication Application
