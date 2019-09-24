@@ -8,6 +8,9 @@ var users = require('../../app/controllers/users.server.controller'),
 // Define the routes module' method
 module.exports = function(app) {
 	// Set up the 'signup' routes 
+
+	app.get('/', (req, res) => res.send('Hello World!'))
+
 	app.route('/signup')
 	   .get(users.renderSignup)
 	   .post(users.signup);
