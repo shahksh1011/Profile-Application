@@ -1,16 +1,18 @@
 // Invoke 'strict' JavaScript mode
 'use strict';
+var express = require('express'),
+    router = express.Router();
 // Define the routes module' method
-module.exports = function (app) {
 
-    /* GET users listing. */
-    app.get('/', function (req, res, next) {
-        res.send('respond with a resource');
-    });
+/* GET users listing. */
+router.get('/', function (req, res, next) {
+    res.send('respond with a resource');
+});
 
-    /* GET user profile. */
-    app.get('/profile', function (req, res, next) {
-        res.send(req.user);
-    });
+/* GET user profile. */
+router.get('/profile', function (req, res, next) {
+    res.send(req.user);
+});
 
-};
+module.exports = router;
+

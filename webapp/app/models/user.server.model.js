@@ -148,4 +148,4 @@ UserSchema.set('toJSON', {
 UserSchema.plugin(autoIncrement.plugin, { model: 'User', field: 'userId' });
 
 // Create the 'User' model out of the 'UserSchema'
-mongoose.model('User', UserSchema);
+module.exports = mongoose.model('User', UserSchema);

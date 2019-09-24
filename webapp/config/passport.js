@@ -6,7 +6,8 @@ var passport = require('passport'),
 	mongoose = require('mongoose'),
 	passportJWT = require("passport-jwt"),
 	JWTStrategy = passportJWT.Strategy,
-	ExtractJWT = passportJWT.ExtractJwt;
+	ExtractJWT = passportJWT.ExtractJwt,
+	config = require('../config/config');
 
 // Define the Passport configuration method
 module.exports = function () {
@@ -29,12 +30,12 @@ module.exports = function () {
 
 	passport.use(new JWTStrategy({
 		jwtFromRequest: ExtractJWT.fromAuthHeaderAsBearerToken(),
-		secretOrKey: 'secret'
+		secretOrKey: config.sessionSecret
 	},
 		function (jwtPayload, cb) {
-
+			const User = require('../app/models/user.server.model');
 			//find the user in db if needed. This functionality may be omitted if you store everything you'll need in JWT payload.
-			return UserModel.findOneById(jwtPayload.id)
+			return User.findById(jwtPayload.id)
 				.then(user => {
 					return cb(null, user);
 				})
