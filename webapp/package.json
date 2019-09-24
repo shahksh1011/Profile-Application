@@ -1,0 +1,37 @@
+{
+  "name": "api_web_app",
+  "version": "1.0.0",
+  "description": "Advanced Mobile Application Development API",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shahksh1011/gochiApi.git"
+  },
+  "start": "node server",
+  "author": "Kshitij Shah",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shahksh1011/gochiApi/issues"
+  },
+  "homepage": "https://github.com/shahksh1011/gochiApi#readme",
+  "devDependencies": {
+    "nodemon": "^1.19.2"
+  },
+  "dependencies": {
+    "bcrypt": "^3.0.6",
+    "body-parser": "^1.19.0",
+    "compression": "^1.7.4",
+    "connect-flash": "^0.1.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.7.1",
+    "mongoose-auto-increment": "^5.0.1",
+    "morgan": "^1.9.1",
+    "passport": "^0.4.0",
+    "passport-local": "^1.0.0"
+  }
+}
