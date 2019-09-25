@@ -24,6 +24,8 @@
     <string name="logout">Logout</string>
     <string name="login">Login</string>
     <string name="signUp">Sign Up</string>
+    <string name="newToApp">New to Application?</string>
+    <string name="Register">Register Now</string>
     <string name="forgotPassword">Forgot Password</string>
     <string name="logo">logo</string>
 </resources>
