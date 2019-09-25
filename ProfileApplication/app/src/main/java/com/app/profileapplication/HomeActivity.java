@@ -155,8 +155,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                         try {
                             JSONObject json = new JSONObject(responseString);
                             user = new User(json);
-                            displayNameTextView.setText(user.getFirstName()+" "+user.getLastName());
-                            displayEmailIdTextView.setText(user.getEmail());
+                            runOnUiThread(() -> {
+                                displayNameTextView.setText(user.getFirstName()+" "+user.getLastName());
+                                displayEmailIdTextView.setText(user.getEmail());
+                            });
 
                             if (savedInstanceState == null) {
                                 Bundle bundle = new Bundle();
