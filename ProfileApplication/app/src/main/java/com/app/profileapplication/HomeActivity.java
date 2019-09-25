@@ -132,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (token!=null){
             Request request = new Request.Builder()
                     .url(url)
-                    .header("Authorization",Parameters.BEARER + " gghf" + token)
+                    .header("Authorization",Parameters.BEARER + " " + token)
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
