@@ -17,6 +17,7 @@ public class ProfileFragment extends Fragment {
     private static final String TAG = "ProfileFragment";
     private String token;
     private User user;
+    private TextView userIdTextView,fullNameTextView,emailIdTextView,usernameTextView,cityTextView,genderTextView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -24,7 +25,7 @@ public class ProfileFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         token = getArguments().getString(Parameters.TOKEN);
         user = (User) getArguments().getSerializable(Parameters.USER_ID);
-        final TextView textView = root.findViewById(R.id.text_home);
+        userIdTextView = root.findViewById(R.id.profile_userIdTextView);
         return root;
     }
 
