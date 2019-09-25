@@ -1,9 +1,6 @@
 package com.app.profileapplication.ui.edit;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +14,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
-import com.app.profileapplication.HomeActivity;
 import com.app.profileapplication.R;
-import com.app.profileapplication.SignUpActivity;
 import com.app.profileapplication.models.User;
 import com.app.profileapplication.utilities.Parameters;
 import com.app.profileapplication.utilities.TextValidator;
@@ -32,7 +27,6 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
