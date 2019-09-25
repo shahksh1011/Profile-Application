@@ -67,3 +67,32 @@ Api takes following parameters
 	3. city
 	4. gender
 It updates the user data for the logged in user. If the request is successful it returns with the success message.
+
+Postman Collection Link: [https://www.getpostman.com/collections/db19f626a527b73a1c43](https://www.getpostman.com/collections/db19f626a527b73a1c43)
+
+### Web Application
+It is hosted on Heroku
+Running on following dependencies: 
+Node: 10
+Express: 4.17.1
+Mongoose: 4.4
+
+Web application Link: [https://profile-application.herokuapp.com/](https://profile-application.herokuapp.com/)
+
+
+### DB Schema
+Our database is hosted on mlab.
+We are using MongoDB for the application.
+User Model:
+	- userId: auto-generated in numeric values
+	- firstName: String
+	- lastName: String
+	- email: String [requires valid email id format, unique parameter]
+	- username: String [unique parameter]
+	- password: Stored using hashing.
+	- salt: String
+	- role: String [default: User]
+	- city: String
+	- gender: String
+	- created: Date [default: Date.now]
+	
