@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
     private String message;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +118,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        token = preferences.getString(Parameters.TOKEN, "");
+        if (token!=null && !Parameters.EMPTY.equalsIgnoreCase(token)){
+            updateUI();
+        }else {
+            token = null;
+        }
+    }
+
     public void post(String url, String json) {
         RequestBody body = RequestBody.create(json, JSON);
         Request request = new Request.Builder()
@@ -141,16 +155,11 @@ public class MainActivity extends AppCompatActivity {
                     Log.v(TAG,responseString);
                     try {
                         JSONObject json = new JSONObject(responseString);
-                        String token = (String) json.get(Parameters.TOKEN);
+                        token = (String) json.get(Parameters.TOKEN);
                         message = (String) json.get(Parameters.MESSAGE);
                         runOnUiThread(() -> Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show());
                         if (token != null) {
-                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                            SharedPreferences.Editor editor = preferences.edit();
-                            editor.putString(Parameters.TOKEN, token);
-                            editor.apply();
-                            Intent intent = new Intent(MainActivity.this, HomeActivity.class);
-                            startActivity(intent);
+                            updateUI();
                         }
                     } catch (JSONException e){
                         e.printStackTrace();
@@ -159,5 +168,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    public void updateUI(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString(Parameters.TOKEN, token);
+        editor.apply();
+        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        startActivity(intent);
     }
 }

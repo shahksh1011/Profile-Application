@@ -236,10 +236,10 @@ public class SignUpActivity extends AppCompatActivity {
                         Log.v(TAG,responseHeaders.name(i) + ": " + responseHeaders.value(i));
                     }
 
-                    Log.v(TAG,responseBody.string());
-                    JSONParser parser = new JSONParser();
+                    String responseString = responseBody.string();
+                    Log.v(TAG,responseString);
                     try {
-                        JSONObject json = (JSONObject) parser.parse(responseBody.string());
+                        JSONObject json = new JSONObject(responseString);
                         String token = (String) json.get(Parameters.TOKEN);
                         message = (String) json.get(Parameters.MESSAGE);
                         runOnUiThread(() -> Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show());
@@ -251,8 +251,6 @@ public class SignUpActivity extends AppCompatActivity {
                             Intent intent = new Intent(SignUpActivity.this, HomeActivity.class);
                             startActivity(intent);
                         }
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     } catch (JSONException e){
                         e.printStackTrace();
                     }

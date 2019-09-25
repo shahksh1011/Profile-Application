@@ -1,8 +1,14 @@
 package com.app.profileapplication.models;
 
+import com.app.profileapplication.utilities.Parameters;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 
 public class User implements Serializable {
+    private String id;
     private String userId;
     private String userProfileImageUrl;
     private String firstName;
@@ -25,6 +31,21 @@ public class User implements Serializable {
 
     public User() {
 
+    }
+
+    public User(JSONObject json){
+        try {
+            this.id = json.getString(Parameters.ID);
+            this.userId = json.getString(Parameters.USER_ID);
+            this.firstName = json.getString(Parameters.FIRST_NAME);
+            this.lastName = json.getString(Parameters.LAST_NAME);
+            this.email = json.getString(Parameters.EMAIL);
+            this.username = json.getString(Parameters.USERNAME);
+            this.city = json.getString(Parameters.CITY);
+            this.gender = json.getString(Parameters.GENDER);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public String getUserId() {
@@ -97,6 +118,14 @@ public class User implements Serializable {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

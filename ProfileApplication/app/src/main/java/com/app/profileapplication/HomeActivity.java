@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -20,11 +21,25 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.app.profileapplication.models.User;
 import com.app.profileapplication.ui.home.HomeFragment;
 import com.app.profileapplication.utilities.Parameters;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Headers;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -38,24 +53,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private TextView displayEmailIdTextView;
     private FragmentManager fragmentManager;
     private FragmentTransaction fragmentTransaction;
+    private final OkHttpClient client = new OkHttpClient();
     private static final String TAG = "HomeActivity";
+    private User user;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         fragmentManager = getSupportFragmentManager();
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         token = preferences.getString(Parameters.TOKEN, "");
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         TextView logOut = findViewById(R.id.logout);
         logOut.setOnClickListener(view -> {
-            Intent intent = new Intent(HomeActivity.this, MainActivity.class);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.clear();
+            editor.commit();
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
         });
+
+        getData(Parameters.API_URL_LOCAL+"/user/profile");
 
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -72,7 +96,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         if (savedInstanceState == null) {
             Bundle bundle = new Bundle();
-            bundle.putSerializable(Parameters.TOKEN, token);
+            bundle.putString(Parameters.TOKEN, token);
+            bundle.putSerializable(Parameters.USER_ID, user);
             HomeFragment homeFragment = new HomeFragment();
             homeFragment.setArguments(bundle);
             fragmentTransaction = fragmentManager.beginTransaction();
@@ -119,5 +144,49 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         }
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    public void getData(String url){
+        if (token!=null){
+            Request request = new Request.Builder()
+                    .url(url)
+                    .header("Authorization",Parameters.BEARER + " " + token)
+                    .build();
+
+            client.newCall(request).enqueue(new Callback() {
+                @Override public void onFailure(Call call, IOException e) {
+                    e.printStackTrace();
+                }
+
+                @Override public void onResponse(Call call, Response response) throws IOException {
+                    try (ResponseBody responseBody = response.body()) {
+                        if (!response.isSuccessful())
+                            throw new IOException("Unexpected code " + response);
+
+                        Headers responseHeaders = response.headers();
+                        for (int i = 0, size = responseHeaders.size(); i < size; i++) {
+                            Log.v(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
+                        }
+
+                        String responseString = responseBody.string();
+                        Log.v(TAG, responseString);
+                        try {
+                            JSONObject json = new JSONObject(responseString);
+                            user = new User(json);
+                            displayNameTextView.setText(user.getFirstName()+" "+user.getLastName());
+                            displayEmailIdTextView.setText(user.getEmail());
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+
+        }else{
+            Intent intent = new Intent(this, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
     }
 }
