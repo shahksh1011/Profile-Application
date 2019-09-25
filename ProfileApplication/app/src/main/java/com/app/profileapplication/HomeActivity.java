@@ -82,9 +82,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         View hView = navigationView.getHeaderView(0);
         displayNameTextView = hView.findViewById(R.id.displayNameTextView);
         displayEmailIdTextView = hView.findViewById(R.id.displayEmailIdTextView);
-        userProfileImageView = hView.findViewById(R.id.userProfileImageView);
 
-        getData(Parameters.API_URL_LOCAL+"/user/profile", savedInstanceState);
+        getData(Parameters.API_URL+"/user/profile", savedInstanceState);
 
     }
 
@@ -166,8 +165,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                                 profileFragment.setArguments(bundle);
                                 fragmentTransaction = fragmentManager.beginTransaction();
                                 fragmentTransaction.replace(R.id.nav_host_fragment, profileFragment).addToBackStack(null).commit();
-                                toolbar.setTitle(R.string.menu_profile);
-                                navigationView.setCheckedItem(R.id.nav_profile);
+                                runOnUiThread(() -> {
+                                    toolbar.setTitle(R.string.menu_profile);
+                                    navigationView.setCheckedItem(R.id.nav_profile);
+                                });
+
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();

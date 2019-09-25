@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 object.put(Parameters.USERNAME, username);
                 object.put(Parameters.PASSWORD, password);
                 String json = object.toString();
-                post(Parameters.API_URL_LOCAL+"/auth/signin",json);
+                post(Parameters.API_URL+"/auth/signin",json);
             } catch (JSONException e) {
                 e.printStackTrace();
             }

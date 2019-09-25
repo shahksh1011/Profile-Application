@@ -106,7 +106,7 @@ public class EditFragment extends Fragment {
                 user.setGender(radioButton.getText().toString());
                 String jsonString = gson.toJson(user);
                 Log.v(TAG, jsonString);
-                post(Parameters.API_URL_LOCAL,jsonString);
+                post(Parameters.API_URL,jsonString);
             }
         });
         return root;

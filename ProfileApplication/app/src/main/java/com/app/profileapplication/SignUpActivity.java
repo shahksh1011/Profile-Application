@@ -50,8 +50,6 @@ public class SignUpActivity extends AppCompatActivity {
     private static final String TAG = "SignUpActivity";
     private static int SELECT_PICTURE = 1;
 
-    @BindView(R.id.signUp_userProfileImageView)
-    ImageView userProfileImageView;
     @BindView(R.id.signUp_firstNameEditText)
     EditText firstNameEditText;
     @BindView(R.id.signUp_lastNameEditText)
@@ -70,7 +68,6 @@ public class SignUpActivity extends AppCompatActivity {
     EditText usernameEditText;
 
     private String message;
-    private Uri selectedImageURI;
     private User user;
     public static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private OkHttpClient client = new OkHttpClient();
@@ -146,24 +143,10 @@ public class SignUpActivity extends AppCompatActivity {
             }
         });
 
-        userProfileImageView.setOnClickListener(view -> {
-            Intent i = new Intent(
-                    Intent.ACTION_PICK,
-                    android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-            startActivityForResult(i, SELECT_PICTURE);
-        });
-
     }
 
     @OnClick(R.id.signUp_signUpButton)
     public void click(View view) {
-        long size = 0;
-        if (selectedImageURI != null) {
-            File f = new File(selectedImageURI.getPath());
-            size = f.length();
-        }
-
 
         if (Parameters.EMPTY.equalsIgnoreCase(firstNameEditText.getText().toString()))
             firstNameEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
@@ -181,11 +164,7 @@ public class SignUpActivity extends AppCompatActivity {
             confirmPasswordEditText.setError(Parameters.INCORRECT_CONFIRM_PASSWORD);
         else if (Parameters.EMPTY.equalsIgnoreCase(cityEditText.getText().toString()))
             cityEditText.setError(Parameters.EMPTY_ERROR_MESSAGE);
-        else if (selectedImageURI == null) {
-            Toast.makeText(this, Parameters.UPLOAD_A_PROFILE_IMAGE, Toast.LENGTH_LONG).show();
-        } else if (size >= 5242880) {
-            Toast.makeText(this, Parameters.UPLOAD_IMAGE_LESS_THAN_5MB, Toast.LENGTH_LONG).show();
-        } else {
+        else {
             int checkedRadioButtonId = genderRadioGroup.getCheckedRadioButtonId();
             RadioButton radioButton = findViewById(checkedRadioButtonId);
 
@@ -196,24 +175,9 @@ public class SignUpActivity extends AppCompatActivity {
 
             String jsonString = gson.toJson(user);
             Log.v(TAG, jsonString);
-            post(Parameters.API_URL_LOCAL+"/auth/signup", jsonString);
+            post(Parameters.API_URL+"/auth/signup", jsonString);
         }
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == RESULT_OK) {
-            if (requestCode == SELECT_PICTURE) {
-                selectedImageURI = data.getData();
-                Picasso.get()
-                        .load(selectedImageURI)
-                        .transform(new CircleTransform()).centerCrop().fit()
-                        .into(userProfileImageView);
-            }
-        }
-    }
-
 
     public void post(String url, String json) {
         RequestBody body = RequestBody.create(json, JSON);
