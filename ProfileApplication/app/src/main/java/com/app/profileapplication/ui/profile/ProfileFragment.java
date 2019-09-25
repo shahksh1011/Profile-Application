@@ -37,6 +37,8 @@ public class ProfileFragment extends Fragment {
             usernameTextView.setText("Username: "+user.getUsername());
             cityTextView.setText("City: "+user.getCity());
             genderTextView.setText("Gender: "+user.getGender());
+        }else {
+
         }
         return root;
     }

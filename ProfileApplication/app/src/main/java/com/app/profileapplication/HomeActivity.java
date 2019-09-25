@@ -76,8 +76,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             finish();
         });
 
-        getData(Parameters.API_URL_LOCAL+"/user/profile");
-
         drawer = findViewById(R.id.drawer_layout);
         toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -91,17 +89,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         displayEmailIdTextView = hView.findViewById(R.id.displayEmailIdTextView);
         userProfileImageView = hView.findViewById(R.id.userProfileImageView);
 
-        if (savedInstanceState == null) {
-            Bundle bundle = new Bundle();
-            bundle.putString(Parameters.TOKEN, token);
-            bundle.putSerializable(Parameters.USER_ID, user);
-            ProfileFragment profileFragment = new ProfileFragment();
-            profileFragment.setArguments(bundle);
-            fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.nav_host_fragment, profileFragment).addToBackStack(null).commit();
-            toolbar.setTitle(R.string.menu_profile);
-            navigationView.setCheckedItem(R.id.nav_profile);
-        }
+        getData(Parameters.API_URL_LOCAL+"/user/profile", savedInstanceState);
+
     }
 
     @Override
@@ -130,6 +119,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_profile:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Parameters.TOKEN, token);
+                bundle.putSerializable(Parameters.USER_ID, user);
                 ProfileFragment profileFragment = new ProfileFragment();
                 profileFragment.setArguments(bundle);
                 fragmentTransaction = fragmentManager.beginTransaction();
@@ -143,7 +133,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    public void getData(String url){
+    public void getData(String url, Bundle savedInstanceState){
         if (token!=null){
             Request request = new Request.Builder()
                     .url(url)
@@ -167,6 +157,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                             user = new User(json);
                             displayNameTextView.setText(user.getFirstName()+" "+user.getLastName());
                             displayEmailIdTextView.setText(user.getEmail());
+
+                            if (savedInstanceState == null) {
+                                Bundle bundle = new Bundle();
+                                bundle.putString(Parameters.TOKEN, token);
+                                bundle.putSerializable(Parameters.USER_ID, user);
+                                ProfileFragment profileFragment = new ProfileFragment();
+                                profileFragment.setArguments(bundle);
+                                fragmentTransaction = fragmentManager.beginTransaction();
+                                fragmentTransaction.replace(R.id.nav_host_fragment, profileFragment).addToBackStack(null).commit();
+                                toolbar.setTitle(R.string.menu_profile);
+                                navigationView.setCheckedItem(R.id.nav_profile);
+                            }
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
