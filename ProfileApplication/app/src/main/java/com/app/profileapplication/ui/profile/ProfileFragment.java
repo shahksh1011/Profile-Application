@@ -8,9 +8,12 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.app.profileapplication.R;
 import com.app.profileapplication.models.User;
+import com.app.profileapplication.ui.edit.EditFragment;
 import com.app.profileapplication.utilities.Parameters;
 
 public class ProfileFragment extends Fragment {
@@ -21,7 +24,7 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
 
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
+        View root = inflater.inflate(R.layout.fragment_profile, container, false);
         token = getArguments().getString(Parameters.TOKEN);
         user = (User) getArguments().getSerializable(Parameters.USER_ID);
         final TextView userIdTextView = root.findViewById(R.id.profile_userIdTextView);
@@ -37,9 +40,19 @@ public class ProfileFragment extends Fragment {
             usernameTextView.setText("Username: "+user.getUsername());
             cityTextView.setText("City: "+user.getCity());
             genderTextView.setText("Gender: "+user.getGender());
-        }else {
-
         }
+
+        root.findViewById(R.id.profile_editButton).setOnClickListener(view -> {
+            Bundle bundle = new Bundle();
+            bundle.putSerializable(Parameters.USER_ID, user);
+            bundle.putString(Parameters.TOKEN, token);
+            EditFragment fragment = new EditFragment();
+            fragment.setArguments(bundle);
+            FragmentManager fragmentManager = getFragmentManager();
+            FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+            fragmentTransaction.replace(R.id.nav_host_fragment, fragment).addToBackStack(null);
+            fragmentTransaction.commit();
+        });
         return root;
     }
 
