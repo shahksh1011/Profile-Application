@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/shahksh1011/gochiApi.git"
+    "url": "git+https://github.com/parthmeht/Profile-Application.git"
   },
   "start": "node server",
   "author": "Kshitij Shah",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/shahksh1011/gochiApi/issues"
+    "url": "https://github.com/parthmeht/Profile-Application/issues"
   },
-  "homepage": "https://github.com/shahksh1011/gochiApi#readme",
+  "homepage": "https://github.com/parthmeht/Profile-Application#readme",
   "devDependencies": {
     "nodemon": "^1.19.2"
   },
