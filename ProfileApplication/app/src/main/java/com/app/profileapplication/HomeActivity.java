@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -67,13 +68,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         TextView logOut = findViewById(R.id.logout);
         logOut.setOnClickListener(view -> {
-            SharedPreferences.Editor editor = preferences.edit();
-            editor.clear();
-            editor.commit();
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+            logout();
         });
 
         drawer = findViewById(R.id.drawer_layout);
@@ -137,7 +132,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if (token!=null){
             Request request = new Request.Builder()
                     .url(url)
-                    .header("Authorization",Parameters.BEARER + " " + token)
+                    .header("Authorization",Parameters.BEARER + " gghf" + token)
                     .build();
 
             client.newCall(request).enqueue(new Callback() {
@@ -147,8 +142,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 @Override public void onResponse(Call call, Response response) throws IOException {
                     try (ResponseBody responseBody = response.body()) {
-                        if (!response.isSuccessful())
+                        if (!response.isSuccessful()){
+                            runOnUiThread(() -> Toast.makeText(getApplicationContext(),"Unauthorized User", Toast.LENGTH_LONG).show());
+                            logout();
                             throw new IOException("Unexpected code " + response);
+                        }
 
                         String responseString = responseBody.string();
                         Log.v(TAG, responseString);
@@ -179,10 +177,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             });
 
         }else{
-            Intent intent = new Intent(this, MainActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(intent);
-            finish();
+            logout();
         }
+    }
+
+    public void logout(){
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.clear();
+        editor.commit();
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        finish();
     }
 }
