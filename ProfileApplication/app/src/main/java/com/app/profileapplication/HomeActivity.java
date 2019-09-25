@@ -22,11 +22,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.app.profileapplication.models.User;
-import com.app.profileapplication.ui.home.HomeFragment;
+import com.app.profileapplication.ui.profile.ProfileFragment;
 import com.app.profileapplication.utilities.Parameters;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,7 +33,6 @@ import java.io.IOException;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.Headers;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -98,12 +95,12 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             Bundle bundle = new Bundle();
             bundle.putString(Parameters.TOKEN, token);
             bundle.putSerializable(Parameters.USER_ID, user);
-            HomeFragment homeFragment = new HomeFragment();
-            homeFragment.setArguments(bundle);
+            ProfileFragment profileFragment = new ProfileFragment();
+            profileFragment.setArguments(bundle);
             fragmentTransaction = fragmentManager.beginTransaction();
-            fragmentTransaction.replace(R.id.nav_host_fragment, homeFragment, "Chat Fragment").addToBackStack(null).commit();
-            toolbar.setTitle(R.string.menu_home);
-            navigationView.setCheckedItem(R.id.nav_home);
+            fragmentTransaction.replace(R.id.nav_host_fragment, profileFragment).addToBackStack(null).commit();
+            toolbar.setTitle(R.string.menu_profile);
+            navigationView.setCheckedItem(R.id.nav_profile);
         }
     }
 
@@ -130,15 +127,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.nav_home:
+            case R.id.nav_profile:
                 Bundle bundle = new Bundle();
                 bundle.putSerializable(Parameters.TOKEN, token);
-                HomeFragment homeFragment = new HomeFragment();
-                homeFragment.setArguments(bundle);
+                ProfileFragment profileFragment = new ProfileFragment();
+                profileFragment.setArguments(bundle);
                 fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.nav_host_fragment, homeFragment, Parameters.HOME_FRAGMENT).addToBackStack(null).commit();
-                toolbar.setTitle(R.string.menu_home);
-                navigationView.setCheckedItem(R.id.nav_home);
+                fragmentTransaction.replace(R.id.nav_host_fragment, profileFragment).addToBackStack(null).commit();
+                toolbar.setTitle(R.string.menu_profile);
+                navigationView.setCheckedItem(R.id.nav_profile);
                 break;
 
         }
@@ -162,11 +159,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     try (ResponseBody responseBody = response.body()) {
                         if (!response.isSuccessful())
                             throw new IOException("Unexpected code " + response);
-
-                        Headers responseHeaders = response.headers();
-                        for (int i = 0, size = responseHeaders.size(); i < size; i++) {
-                            Log.v(TAG, responseHeaders.name(i) + ": " + responseHeaders.value(i));
-                        }
 
                         String responseString = responseBody.string();
                         Log.v(TAG, responseString);

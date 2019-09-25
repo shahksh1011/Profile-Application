@@ -37,7 +37,9 @@
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header_home"
-        app:menu="@menu/activity_home_drawer">
+        app:menu="@menu/activity_home_drawer"
+        android:background="@color/colorPrimary"
+        app:itemTextColor="@android:color/background_light">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +53,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="start"
-                android:text="@string/logout"/>
+                android:text="@string/logout"
+                android:textColor="@android:color/background_light" />
         </LinearLayout>
     </com.google.android.material.navigation.NavigationView>
 

@@ -1,7 +1,6 @@
 package com.app.profileapplication;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -22,8 +21,6 @@ import com.app.profileapplication.utilities.TextValidator;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
@@ -159,6 +156,10 @@ public class MainActivity extends AppCompatActivity {
                         message = (String) json.get(Parameters.MESSAGE);
                         runOnUiThread(() -> Toast.makeText(getApplicationContext(),message,Toast.LENGTH_LONG).show());
                         if (token != null) {
+                            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putString(Parameters.TOKEN, token);
+                            editor.apply();
                             updateUI();
                         }
                     } catch (JSONException e){
@@ -171,10 +172,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void updateUI(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-        SharedPreferences.Editor editor = preferences.edit();
-        editor.putString(Parameters.TOKEN, token);
-        editor.apply();
         Intent intent = new Intent(MainActivity.this, HomeActivity.class);
         startActivity(intent);
     }
